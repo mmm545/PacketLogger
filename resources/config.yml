@@ -1,0 +1,4 @@
+---
+log_sent_packets: true
+log_received_packets: true
+...

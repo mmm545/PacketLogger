@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace mmm545\PacketLogger;
+
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\plugin\PluginBase;
+use pocketmine\event\Listener;
+use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\utils\TextFormat as TF;
+use pocketmine\utils\Config;
+class Main extends PluginBase implements Listener{
+    public static $config;
+       public function onEnable(){
+           $this->saveDefaultConfig();
+           $this->getServer()->getPluginManager()->registerEvents($this, $this);
+           self::$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+           if(!file_exists($this->getDataFolder()."\packets.log")){
+               file_put_contents($this->getDataFolder()."\packets.log", "#[HH:MM:SS] #PacketName\n");
+           }
+       }
+
+       public function onSend(DataPacketSendEvent $event){
+           if(!self::$config->get("log_sent_packets")){
+               return false;
+           }
+
+           $msg = "[".date('H:i:s')."] ".$event->getPacket()->getName();
+           $file = $this->getDataFolder() ."\packets.log";
+           file_put_contents($file, $msg." has been sent!\n", FILE_APPEND | LOCK_EX);
+       }
+
+       public function onReceive(DataPacketReceiveEvent $event){
+           if(!self::$config->get("log_received_packets")){
+               return false;
+           }
+           $msg = "[".date('H:i:s:v')."] ".$event->getPacket()->getName();
+           $file = $this->getDataFolder() ."\packets.log";
+           file_put_contents($file, $msg." has been received!\n", FILE_APPEND | LOCK_EX);
+       }
+       public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
+       {
+           switch($command->getName()){
+               case "pklog":
+               if(!file_exists($this->getDataFolder()."/packets.log")){
+                   $sender->sendMessage(TF::RED."Log file doesn't exist");
+                   return false;
+               }
+               $log = file_get_contents($this->getDataFolder()."/packets.log");
+               if($log !== false){
+                   $sender->sendMessage($log);
+               }
+               else{
+                   $sender->sendMessage(TF::RED."Error while trying to read the file");
+               }
+               break;
+               case "pkclear":
+               if(!file_exists($this->getDataFolder()."/packets.log")){
+                   $sender->sendMessage(TF::RED."Log file doesn't exist");
+                   return false;
+               }
+               file_put_contents($this->getDataFolder()."/packets.log", "");
+               $sender->sendMessage("Log file has been cleared");
+               break;
+               case "pkreload":
+               self::$config->reload();
+               $sender->sendMessage("Config has been successfully reloaded");
+               break;
+           }
+           return true;
+       }
+}
