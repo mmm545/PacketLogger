@@ -27,19 +27,38 @@ class Main extends PluginBase implements Listener{
            if(!self::$config->get("log_sent_packets")){
                return false;
            }
-
-           $msg = "[".date('H:i:s')."] ".$event->getPacket()->getName();
-           $file = $this->getDataFolder() ."\packets.log";
-           file_put_contents($file, $msg." has been sent!\n", FILE_APPEND | LOCK_EX);
+           $pkname = $event->getPacket()->getName();
+           if(self::$config->get("log_specific_packets")){
+               if(in_array($pkname, self::$config->get("packets"))){
+                   $msg = "[".date('H:i:s')."] ".$pkname;
+                   $file = $this->getDataFolder() ."\packets.log";
+                   file_put_contents($file, $msg." has been sent!\n", FILE_APPEND | LOCK_EX);
+               }
+           }
+           else {
+               $msg = "[" . date('H:i:s') . "] " . $pkname;
+               $file = $this->getDataFolder() . "\packets.log";
+               file_put_contents($file, $msg . " has been sent!\n", FILE_APPEND | LOCK_EX);
+           }
        }
 
        public function onReceive(DataPacketReceiveEvent $event){
            if(!self::$config->get("log_received_packets")){
                return false;
            }
-           $msg = "[".date('H:i:s:v')."] ".$event->getPacket()->getName();
-           $file = $this->getDataFolder() ."\packets.log";
-           file_put_contents($file, $msg." has been received!\n", FILE_APPEND | LOCK_EX);
+           $pkname = $event->getPacket()->getName();
+           if(self::$config->get("log_specific_packets")){
+               if(in_array($pkname, self::$config->get("packets"))){
+                   $msg = "[".date('H:i:s')."] ".$pkname;
+                   $file = $this->getDataFolder() ."\packets.log";
+                   file_put_contents($file, $msg." has been received!\n", FILE_APPEND | LOCK_EX);
+               }
+           }
+           else {
+               $msg = "[" . date('H:i:s') . "] " .$pkname;
+               $file = $this->getDataFolder() . "\packets.log";
+               file_put_contents($file, $msg . " has been received!\n", FILE_APPEND | LOCK_EX);
+           }
        }
        public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
        {
@@ -62,7 +81,7 @@ class Main extends PluginBase implements Listener{
                    $sender->sendMessage(TF::RED."Log file doesn't exist");
                    return false;
                }
-               file_put_contents($this->getDataFolder()."/packets.log", "");
+               file_put_contents($this->getDataFolder()."/packets.log", "#[HH:MM:SS] #PacketName\n");
                $sender->sendMessage("Log file has been cleared");
                break;
                case "pkreload":

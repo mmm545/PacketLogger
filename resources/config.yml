@@ -1,4 +1,15 @@
 ---
+# Allow sent packets to be logged
+# values: true/false
 log_sent_packets: true
+
+# Allow received packets to be logged
+# values: true/false
 log_received_packets: true
+
+# Only allow specific type of packets to be logged
+# values: true/false specific
+log_specific_packets: false
+
+packets: []
 ...
