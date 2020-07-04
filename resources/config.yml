@@ -7,9 +7,11 @@ log_sent_packets: true
 # values: true/false
 log_received_packets: true
 
-# Only allow specific type of packets to be logged
-# values: true/false specific
-log_specific_packets: false
+# Block certain types of packets from being logged
+# values: true/false
+block_packets: false
 
-packets: []
+# Here you will put the name of packets you want to block
+# Type the name correctly
+blocked_packets: []
 ...
