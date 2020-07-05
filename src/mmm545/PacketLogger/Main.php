@@ -11,13 +11,10 @@ use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\utils\TextFormat as TF;
-use pocketmine\utils\Config;
 class Main extends PluginBase implements Listener{
-    public static $config;
        public function onEnable(){
            $this->saveDefaultConfig();
            $this->getServer()->getPluginManager()->registerEvents($this, $this);
-           self::$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
            if(!file_exists($this->getDataFolder()."\packets.log")){
                file_put_contents($this->getDataFolder()."\packets.log", "#[HH:MM:SS] #PacketName\n");
            }
@@ -25,12 +22,12 @@ class Main extends PluginBase implements Listener{
 
        public function onSend(DataPacketSendEvent $event){
            //packets go brrrr
-           if(!self::$config->get("log_sent_packets")){
+           if($this->getConfig()->get("log_sent_packets")){
                return false;
            }
            $pkname = $event->getPacket()->getName();
-           if(self::$config->get("block_packets")){
-               if(!in_array($pkname, self::$config->get("blocked_packets"))){
+           if($this->getConfig()->get("block_packets")){
+               if(!in_array($pkname, $this->getConfig()->get("blocked_packets"))){
                    $msg = "[".date('H:i:s')."] ".$pkname;
                    $file = $this->getDataFolder()."\packets.log";
                    file_put_contents($file, $msg." has been sent!\n", FILE_APPEND | LOCK_EX);
@@ -44,12 +41,12 @@ class Main extends PluginBase implements Listener{
 
        public function onReceive(DataPacketReceiveEvent $event){
            //packets go brrrr
-           if(!self::$config->get("log_received_packets")){
+           if($this->getConfig()->get("log_received_packets")){
                return false;
            }
            $pkname = $event->getPacket()->getName();
-           if(self::$config->get("block_packets")){
-               if(!in_array($pkname, self::$config->get("blocked_packets"))){
+           if($this->getConfig()->get("block_packets")){
+               if(!in_array($pkname, $this->getConfig()->get("blocked_packets"))){
                    $msg = "[".date('H:i:s')."] ".$pkname;
                    $file = $this->getDataFolder() ."\packets.log";
                    file_put_contents($file, $msg." has been received!\n", FILE_APPEND | LOCK_EX);
@@ -65,7 +62,8 @@ class Main extends PluginBase implements Listener{
            switch($command->getName()){
                case "pklog":
                if(!file_exists($this->getDataFolder()."/packets.log")){
-                   $sender->sendMessage(TF::RED."Log file doesn't exist");
+                   $sender->sendMessage(TF::RED."Log file doesn't exist, creating new one");
+                   file_put_contents($this->getDataFolder()."\packets.log", "#[HH:MM:SS] #PacketName\n");
                    return false;
                    //lol rip
                }
@@ -80,7 +78,8 @@ class Main extends PluginBase implements Listener{
                break;
                case "pkclear":
                if(!file_exists($this->getDataFolder()."/packets.log")){
-                   $sender->sendMessage(TF::RED."Log file doesn't exist");
+                   $sender->sendMessage(TF::RED."Log file doesn't exist, creating new one");
+                   file_put_contents($this->getDataFolder()."\packets.log", "#[HH:MM:SS] #PacketName\n");
                    return false;
                }
                //Log: *fades away*
@@ -88,7 +87,7 @@ class Main extends PluginBase implements Listener{
                $sender->sendMessage("Log file has been cleared");
                break;
                case "pkreload":
-               self::$config->reload();
+               $this->getConfig()->reload();
                $sender->sendMessage("Config has been successfully reloaded");
                break;
            }
