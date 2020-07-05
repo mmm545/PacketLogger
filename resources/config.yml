@@ -11,7 +11,7 @@ log_received_packets: true
 # values: true/false
 block_packets: false
 
-# Here you will put the name of packets you want to block
+# Here you will put the name of packets you want to block from being logged
 # Type the name correctly
 blocked_packets: []
 ...
