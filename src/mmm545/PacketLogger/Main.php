@@ -22,7 +22,7 @@ class Main extends PluginBase implements Listener{
 
        public function onSend(DataPacketSendEvent $event){
            //packets go brrrr
-           if($this->getConfig()->get("log_sent_packets")){
+           if(!$this->getConfig()->get("log_sent_packets")){
                return false;
            }
            $pkname = $event->getPacket()->getName();
@@ -41,7 +41,7 @@ class Main extends PluginBase implements Listener{
 
        public function onReceive(DataPacketReceiveEvent $event){
            //packets go brrrr
-           if($this->getConfig()->get("log_received_packets")){
+           if(!$this->getConfig()->get("log_received_packets")){
                return false;
            }
            $pkname = $event->getPacket()->getName();
