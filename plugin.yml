@@ -15,9 +15,12 @@ commands:
     permission: pklogger.reload
 
 permissions:
-    pklogger.log:
-      description: Gives permission to dump all the log contents
-    pklogger.clear:
-      description: Gives permission to clear the log file
-    pklogger.reload:
-      description: Gives permission to reload the config
+  pklogger:
+    description: Gives permission to all PacketLogger Commands
+    children:
+      pklogger.log:
+        description: Gives permission to dump all the log contents
+      pklogger.clear:
+        description: Gives permission to clear the log file
+      pklogger.reload:
+        description: Gives permission to reload the config
