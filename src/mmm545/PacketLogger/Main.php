@@ -19,10 +19,6 @@ class Main extends PluginBase implements Listener{
            if(!file_exists($this->getDataFolder()."\packets.log")){
                file_put_contents($this->getDataFolder()."\packets.log", "#[Date Time] #PacketName\n");
            }
-           if(!in_array($this->getConfig()->get("mode"), ["blacklist", "whitelist"])){
-               $this->getLogger()->error('Invalid mode selected, only "blacklist" or "whitelist" are allowed. Setting it to default...');
-               $this->getConfig()->set("mode", "blacklist");
-           }
        }
 
        public function onSend(DataPacketSendEvent $event){
