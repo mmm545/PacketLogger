@@ -26,24 +26,13 @@ class Main extends PluginBase implements Listener{
            if(!$this->getConfig()->get("log_sent_packets")){
                return false;
            }
-           $pkname = $event->getPacket()->getName();
-           $date = new DateTime();
-           switch($this->getConfig()->get("mode")){
-               case "blacklist":
-               if(!in_array($pkname, $this->getConfig()->get("packets"))){
-                   $msg = "[".$date->format('Y-m-d H:i:s:v')."] ".$pkname;
-                   $file = $this->getDataFolder() ."\packets.log";
-                   file_put_contents($file, $msg." has been sent!\n", FILE_APPEND | LOCK_EX);
-               }
-               break;
-
-               case "whitelist":
-               if(in_array($pkname, $this->getConfig()->get("packets"))){
-                   $msg = "[".$date->format('Y-m-d H:i:s:v')."] ".$pkname;
-                   $file = $this->getDataFolder() ."\packets.log";
-                   file_put_contents($file, $msg." has been sent!\n", FILE_APPEND | LOCK_EX);
-               }
-               break;
+           if($this->getConfig()->get("mode") == "blacklist") {
+               $this->blacklist($event, "sent");
+               return true;
+           }
+           if($this->getConfig()->get("mode") == "whitelist") {
+               $this->whitelist($event, "sent");
+               return true;
            }
        }
 
@@ -52,24 +41,13 @@ class Main extends PluginBase implements Listener{
            if(!$this->getConfig()->get("log_received_packets")){
                return false;
            }
-           $pkname = $event->getPacket()->getName();
-           $date = new DateTime();
-           switch($this->getConfig()->get("mode")){
-               case "blacklist":
-               if(!in_array($pkname, $this->getConfig()->get("packets"))){
-                   $msg = "[".$date->format('Y-m-d H:i:s:v')."] ".$pkname;
-                   $file = $this->getDataFolder() ."\packets.log";
-                   file_put_contents($file, $msg." has been received!\n", FILE_APPEND | LOCK_EX);
-               }
-               break;
-
-               case "whitelist":
-               if(in_array($pkname, $this->getConfig()->get("packets"))){
-                   $msg = "[".$date->format('Y-m-d H:i:s:v')."] ".$pkname;
-                   $file = $this->getDataFolder() ."\packets.log";
-                   file_put_contents($file, $msg." has been received!\n", FILE_APPEND | LOCK_EX);
-               }
-               break;
+           if($this->getConfig()->get("mode") == "blacklist") {
+               $this->blacklist($event, "received");
+               return true;
+           }
+           if($this->getConfig()->get("mode") == "whitelist") {
+               $this->whitelist($event, "received");
+               return true;
            }
        }
        public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
@@ -107,5 +85,23 @@ class Main extends PluginBase implements Listener{
                break;
            }
            return true;
+       }
+       private function blacklist($event, string $sentOrReceived){
+           $pkname = $event->getPacket()->getName();
+           $date = new DateTime();
+           if(!in_array($pkname, $this->getConfig()->get("packets"))){
+               $msg = "[".$date->format('Y-m-d H:i:s:v')."] ".$pkname;
+               $file = $this->getDataFolder() ."\packets.log";
+               file_put_contents($file, $msg." has been ".$sentOrReceived."!\n", FILE_APPEND | LOCK_EX);
+           }
+       }
+       private function whitelist($event, $sentOrReceived){
+           $pkname = $event->getPacket()->getName();
+           $date = new DateTime();
+           if(in_array($pkname, $this->getConfig()->get("packets"))){
+               $msg = "[".$date->format('Y-m-d H:i:s:v')."] ".$pkname;
+               $file = $this->getDataFolder() ."\packets.log";
+               file_put_contents($file, $msg." has been ".$sentOrReceived."!\n", FILE_APPEND | LOCK_EX);
+           }
        }
 }
