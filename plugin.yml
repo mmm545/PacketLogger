@@ -1,3 +1,4 @@
+---
 name: PacketLogger
 version: 1.1.0
 main: mmm545\PacketLogger\Main
@@ -24,3 +25,4 @@ permissions:
         description: Gives permission to clear the log file
       pklogger.reload:
         description: Gives permission to reload the config
+...
