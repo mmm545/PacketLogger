@@ -1,8 +1,9 @@
 name: PacketLogger
-version: 1.1.0
-main: mmm545\PacketLogger\Main
-api: 3.0.0
+version: 2.0.0
+main: mmm545\PacketLogger\PacketLogger
+api: 4.0.0
 author: mmm545
+src-namespace-prefix: mmm545\PacketLogger
 commands:
   pklog:
     description: Dumps all the log contents
@@ -15,12 +16,9 @@ commands:
     permission: pklogger.reload
 
 permissions:
-  pklogger:
-    description: Gives permission to all PacketLogger Commands
-    children:
-      pklogger.log:
-        description: Gives permission to dump all the log contents
-      pklogger.clear:
-        description: Gives permission to clear the log file
-      pklogger.reload:
-        description: Gives permission to reload the config
+  pklogger.log:
+    description: Gives permission to dump all the log contents
+  pklogger.clear:
+    description: Gives permission to clear the log file
+  pklogger.reload:
+    description: Gives permission to reload the config
