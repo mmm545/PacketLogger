@@ -8,7 +8,6 @@ Download the plugin and drop it into your plugins folder\
 `/pkclear` Clears the log file\
 `/pkreload` Reloads config
 ## Permissions
-`pklogger` Gives permission to all PacketLogger Commands\
 `pklogger.log` Gives permission to use `/pklog`\
 `pklogger.clear` Gives permission to use `/pkclear`\
 `pklogger.reload` Gives permission to use `/pkreload`
