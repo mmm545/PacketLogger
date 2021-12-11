@@ -42,6 +42,9 @@ class PacketLogger extends PluginBase implements Listener {
         return true;
     }
 
+    /**
+     * @handleCancelled true
+     */
     public function onSend(DataPacketSendEvent $event){
         if(!$this->getConfig()->get("log_sent_packets")){
             return;
@@ -62,6 +65,9 @@ class PacketLogger extends PluginBase implements Listener {
         }
     }
 
+    /**
+     * @handleCancelled true
+     */
     public function onReceive(DataPacketReceiveEvent $event){
         if(!$this->getConfig()->get("log_received_packets")){
             return;
