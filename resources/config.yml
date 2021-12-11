@@ -16,4 +16,8 @@ blacklisted_packets: []
 
 # List of whitelisted packets
 whitelisted_packets: []
+
+# Maximum log file size
+# In Megabytes
+max_size: 16
 ...

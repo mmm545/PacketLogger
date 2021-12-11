@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace mmm545\PacketLogger;
 
 use DateTime;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\DataPacketSendEvent;
@@ -23,6 +25,21 @@ class PacketLogger extends PluginBase implements Listener {
         if(!file_exists($this->logPath)) $this->createLogFile();
         $this->saveDefaultConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    }
+
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
+    {
+        switch($command->getName()){
+            case "pkclear":
+                $this->createLogFile(); // it doesn't have an append flag so it will overwrite everything
+                $this->getLogger()->info("Log file has been cleared");
+                break;
+
+            case "pkreload":
+                $this->reloadConfig();
+                $this->getLogger()->info("Config has been reloaded");
+        }
+        return true;
     }
 
     public function onSend(DataPacketSendEvent $event){
@@ -71,10 +88,13 @@ class PacketLogger extends PluginBase implements Listener {
         if($this->getConfig()->get("whitelist") && !isset($whitelist[$packetName])) return;
         if(isset($blacklist[$packetName])) return;
 
+        if(filesize($this->logPath) / 1048576 >= $this->getConfig()->get("max_size")) $this->createLogFile();
+
         $dateTime = (new DateTime())->format("Y-m-d H:i:s.v");
         $message = "$dateTime $packetName $isCancelled $src $srcIp $srcPort $dst $dstIp $dstPort\n";
 
         file_put_contents($this->logPath, $message, FILE_APPEND);
+        clearstatcache(true, $this->logPath);
 
     }
 
