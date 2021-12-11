@@ -7,12 +7,13 @@ log_sent_packets: true
 # values: true/false
 log_received_packets: true
 
-# Mode can be either "blacklist" or "whitelist"
-# blacklist will log all the packets except the ones specified below
-# whitelist will only log the packets specified below
-# Default is blacklist
-mode: blacklist
+# If true, only whitelisted_packets will be logged
+# values: true/false
+whitelist: false
 
-# List of blacklisted/whitelisted packets
-packets: []
+# List of blacklisted packets
+blacklisted_packets: []
+
+# List of whitelisted packets
+whitelisted_packets: []
 ...
