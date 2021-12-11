@@ -1,6 +1,6 @@
 # PacketLogger
 A packet logger for Pocketmine-MP\
-WARNING: This plugin is experimental and may lag your server with large amount of players (If it does please make an issue)
+WARNING: This plugin is experimental and may lag your server with large amount of players (If it does please make an issue, and report any bugs)
 ## What's this?
 It logs any packet sent between the player and the server
 ## Usage
