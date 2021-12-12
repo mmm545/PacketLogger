@@ -1,5 +1,5 @@
 # PacketLogger
-A packet logger for Pocketmine-MP\
+A packet logger for Pocketmine-MP
 
 WARNING: This plugin is experimental and may lag your server with large amount of players (If it does please make an issue, and report any bugs)\
 Make sure to delete your config if you were using older versions
